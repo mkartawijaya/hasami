@@ -20,11 +20,10 @@ def remove_enclosed_sentence_endings(text):
     """
     Removes the SENTENCE_SEPARATOR character from all enclosed parts of the input string.
     """
-    # FIXME:
-    # Due to the way the regexp is constructed this method is unable to correctly remove
-    # all separators that occur in nested enclosures of the same kind, e.g. "「foo「!」bar!」".
-    # But maybe this is not a major problem, as natural text will in general not contain
-    # such constructions very often?
+    # Since the matching is done by regex not all separators that occur in nested enclosures of the same
+    # kind, e.g. "「foo「!」bar!」" will be removed correctly due to the inability to match arbitrarily
+    # nested balanced delimiters via regex. But this should not be a major problem, as natural text
+    # will in general not contain such constructions very often.
     return ENCLOSURE_PATTERN.sub(lambda m: m.group(0).replace(SENTENCE_SEPARATOR, ''), text)
 
 
