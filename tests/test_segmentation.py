@@ -56,3 +56,11 @@ class TestSentenceSegmentation(unittest.TestCase):
         """
         text = '外外外「〇〇〇「中中中。」〇〇〇！」外外外'
         self.assertEqual([text], hasami.segment_sentences(text))
+
+    def test_custom_enclosures(self):
+        """Test that custom enclosures can be defined"""
+        instance = hasami.Hasami(enclosures='##$$')
+        self.assertEqual([
+            '「外外外#中中中。#外外外。',
+            '$中中中。$外外外」'
+        ], instance.segment_sentences('「外外外#中中中。#外外外。$中中中。$外外外」'))
