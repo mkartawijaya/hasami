@@ -3,6 +3,8 @@ from typing import List
 
 import hasami.util
 
+DEFAULT_SENTENCE_ENDING_MARKERS = '。！？'
+
 DEFAULT_ENCLOSURES = '「」『』（）'
 
 SENTENCE_SEPARATOR = chr(30)  # non-printable record separator
@@ -10,16 +12,23 @@ SENTENCE_SEPARATOR = chr(30)  # non-printable record separator
 
 class Hasami:
 
-    def __init__(self, enclosures: str = DEFAULT_ENCLOSURES):
+    def __init__(
+            self,
+            sentence_ending_markers: str = DEFAULT_SENTENCE_ENDING_MARKERS,
+            enclosures: str = DEFAULT_ENCLOSURES
+    ):
         """Construct an instance that recognizes the specified enclosures.
 
         :param enclosures: The enclosures that should be considered during segmentation.
         """
 
+        if not sentence_ending_markers:
+            raise ValueError('At least one sentence-ending marker must be supplied')
+
         enclosure_def = hasami.util.make_enclosure_definitions(enclosures)
         # create regexp for all enclosures in the form of "『.?*』|「.?*」|..."
         self.__enclosure_pattern = re.compile('|'.join('%s.*?%s' % tuple(map(re.escape, e)) for e in enclosure_def))
-        self.__sentence_ending_pattern = re.compile(r'([。！？]+)')
+        self.__sentence_ending_pattern = re.compile('([%s]+)' % re.escape(sentence_ending_markers))
 
     def __mark_sentence_endings(self, text: str) -> str:
         """

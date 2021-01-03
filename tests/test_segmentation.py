@@ -57,10 +57,27 @@ class TestSentenceSegmentation(unittest.TestCase):
         text = '外外外「〇〇〇「中中中。」〇〇〇！」外外外'
         self.assertEqual([text], hasami.segment_sentences(text))
 
+    def test_custom_sentence_ending_markers(self):
+        """Test that custom sentence-ending markers can be defined"""
+        instance = hasami.Hasami(sentence_ending_markers='.,')
+        self.assertEqual([
+            'これが最初の文です.',
+            'これは二番目の文です,',
+            'これが最後の文です。'
+        ], instance.segment_sentences('これが最初の文です.これは二番目の文です,これが最後の文です。'))
+
+    def test_sentence_ending_marker_required(self):
+        """Test that at least one sentence-ending markers has to be defined"""
+        with self.assertRaises(ValueError):
+            hasami.Hasami(sentence_ending_markers='')
+
     def test_custom_enclosures(self):
         """Test that custom enclosures can be defined"""
-        instance = hasami.Hasami(enclosures='##$$')
-        self.assertEqual([
-            '「外外外#中中中。#外外外。',
-            '$中中中。$外外外」'
-        ], instance.segment_sentences('「外外外#中中中。#外外外。$中中中。$外外外」'))
+        for enclosures, text, expected_sentences in [
+            ('##$$', '「外外外#中中中。#外外外。$中中中。$外外外」', ['「外外外#中中中。#外外外。', '$中中中。$外外外」']),
+            # if there are no enclosures defined then all sentence endings will be split
+            ('', '外外外「中中中。」外外外『中中中。』外外外', ['外外外「中中中。', '」外外外『中中中。', '』外外外'])
+        ]:
+            with self.subTest(enclosures=enclosures):
+                instance = hasami.Hasami(enclosures=enclosures)
+                self.assertEqual(expected_sentences, instance.segment_sentences(text))
