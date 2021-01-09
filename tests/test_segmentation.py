@@ -7,7 +7,7 @@ class TestSentenceSegmentation(unittest.TestCase):
 
     def test_dont_modify_single_sentence(self):
         """Test that text without any (internal) sentence endings is left unmodified"""
-        for text in ['', '。', '！', '？', 'これは単純な文です', 'これは単純な文です。', 'これは単純な文です！', 'これは単純な文です？', ]:
+        for text in ['', '。', '！', '？', 'これは単純な文です', 'これは単純な文です。', 'これは単純な文です！', 'これは単純な文です？']:
             with self.subTest(text=text):
                 self.assertEqual([text], hasami.segment_sentences(text))
 
@@ -45,6 +45,26 @@ class TestSentenceSegmentation(unittest.TestCase):
         ]:
             with self.subTest(text=text):
                 self.assertEqual(expected_sentences, hasami.segment_sentences(text))
+
+    def test_strip_whitespace(self):
+        """Test that surrounding whitespace is stripped from sentences by default"""
+        for text, expected_sentences in [
+            (' ', ['']),
+            (' 。     ', ['。']),
+            (' 〇〇〇。 〇〇〇。 〇〇〇。 ', ['〇〇〇。', '〇〇〇。', '〇〇〇。']),
+        ]:
+            with self.subTest(text=text):
+                self.assertEqual(expected_sentences, hasami.segment_sentences(text))
+
+    def test_keep_whitespace(self):
+        """Test that surrounding whitespace can optionally be kept"""
+        for text, expected_sentences in [
+            (' ', [' ']),
+            (' 。     ', [' 。', '     ']),
+            (' 〇〇〇。 〇〇〇。 〇〇〇。 ', [' 〇〇〇。', ' 〇〇〇。', ' 〇〇〇。', ' ']),
+        ]:
+            with self.subTest(text=text):
+                self.assertEqual(expected_sentences, hasami.segment_sentences(text, strip_whitespace=False))
 
     @unittest.expectedFailure
     def test_nested_enclosures_not_segmented_correctly(self):

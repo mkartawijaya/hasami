@@ -6,7 +6,7 @@ import hasami
 
 def main():
     for line in fileinput.input():
-        for sentence in hasami.segment_sentences(line.rstrip()):
+        for sentence in hasami.segment_sentences(line, strip_whitespace=True):
             print(sentence, file=sys.stdout)
 
 

@@ -46,6 +46,9 @@ class Hasami:
         # will in general not contain such constructions very often.
         return self.__enclosure_pattern.sub(lambda m: m.group(0).replace(SENTENCE_SEPARATOR, ''), text)
 
-    def segment_sentences(self, text: str) -> List[str]:
+    def segment_sentences(self, text: str, strip_whitespace=True) -> List[str]:
+        # if not removed trailing whitespace ends up as an individual chunk after splitting
+        text = text.strip() if strip_whitespace else text
         marked_text = self.__remove_enclosed_sentence_endings(self.__mark_sentence_endings(text))
-        return marked_text.rstrip(SENTENCE_SEPARATOR).split(SENTENCE_SEPARATOR)
+        sentences = marked_text.rstrip(SENTENCE_SEPARATOR).split(SENTENCE_SEPARATOR)
+        return [s.strip() for s in sentences] if strip_whitespace else sentences
