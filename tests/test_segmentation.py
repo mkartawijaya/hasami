@@ -11,6 +11,18 @@ class TestSentenceSegmentation(unittest.TestCase):
             with self.subTest(text=text):
                 self.assertEqual([text], hasami.segment_sentences(text))
 
+    def test_insert_newlines(self):
+        """Test that newlines are added to sentence endings"""
+        for text, expected_sentences in [
+            ('これは単純な文です', 'これは単純な文です'),
+            ('これは単純な文です。', 'これは単純な文です。\n'),
+            ('これが最初の文です。これは二番目の文です。これが最後の文です。', 'これが最初の文です。\nこれは二番目の文です。\nこれが最後の文です。\n'),
+            ('これが最初の文です。「これは二番目の文です。」これが最後の文です。', 'これが最初の文です。\n「これは二番目の文です。」これが最後の文です。\n'),
+            ('これが最初の文です。   これは二番目の文です。   これが最後の文です。', 'これが最初の文です。\n   これは二番目の文です。\n   これが最後の文です。\n'),
+        ]:
+            with self.subTest(text=text):
+                self.assertEqual(expected_sentences, hasami.insert_newlines(text))
+
     def test_simple_segmentation(self):
         """Test that text is split on simple sentence endings"""
         for text, expected_sentences in [
