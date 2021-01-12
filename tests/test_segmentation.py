@@ -1,3 +1,4 @@
+import re
 import unittest
 
 import hasami
@@ -112,4 +113,23 @@ class TestSentenceSegmentation(unittest.TestCase):
         ]:
             with self.subTest(enclosures=enclosures):
                 instance = hasami.Hasami(enclosures=enclosures)
+                self.assertEqual(expected_sentences, instance.segment_sentences(text))
+
+    def test_custom_exceptions(self):
+        """Test that exceptions can be defined"""
+        instance = hasami.Hasami(exceptions=[
+            # ignore untypical use of punctuation
+            '君の名は。\n',
+            # remove internal/errant newlines
+            r'\w\n\w',
+            # remove empty lines
+            re.compile(r'(?<=\n)\s+\n')
+        ])
+
+        for text, expected_sentences in [
+            ('君の名は。見たことあるの', ['君の名は。見たことあるの']),
+            ('これは\n単純な文\nです', ['これは単純な文です']),
+            ('これが最初の文です。 \nこれは二番目の文です。 \nこれが最後の文です。', ['これが最初の文です。', 'これは二番目の文です。', 'これが最後の文です。'])
+        ]:
+            with self.subTest(text=text):
                 self.assertEqual(expected_sentences, instance.segment_sentences(text))
