@@ -29,7 +29,9 @@ class Hasami:
         if not sentence_ending_markers:
             raise ValueError('At least one sentence-ending marker must be supplied')
 
-        self.__sentence_ending_pattern = re.compile('([%s]+)' % re.escape(sentence_ending_markers))
+        # The lookahead "(?!\n)" is used to avoid adding unnecessary
+        # when there are already proper newlines in place.
+        self.__sentence_ending_pattern = re.compile('([%s]+(?!\n))' % re.escape(sentence_ending_markers))
 
         # create regexp for all enclosures in the form of "『.?*』|「.?*」|..."
         # Since the matching is done by regex not all newlines that occur in nested enclosures of the same

@@ -20,6 +20,8 @@ class TestSentenceSegmentation(unittest.TestCase):
             ('これが最初の文です。これは二番目の文です。これが最後の文です。', 'これが最初の文です。\nこれは二番目の文です。\nこれが最後の文です。\n'),
             ('これが最初の文です。「これは二番目の文です。」これが最後の文です。', 'これが最初の文です。\n「これは二番目の文です。」これが最後の文です。\n'),
             ('これが最初の文です。   これは二番目の文です。   これが最後の文です。', 'これが最初の文です。\n   これは二番目の文です。\n   これが最後の文です。\n'),
+            # inserting unnecessary newlines should be avoided
+            ('これが最初の文です。\nこれは二番目の文です。\nこれが最後の文です。', 'これが最初の文です。\nこれは二番目の文です。\nこれが最後の文です。\n'),
         ]:
             with self.subTest(text=text):
                 self.assertEqual(expected_sentences, hasami.insert_newlines(text))
@@ -29,7 +31,9 @@ class TestSentenceSegmentation(unittest.TestCase):
         for text, expected_sentences in [
             ('これが最初の文です。これは二番目の文です。これが最後の文です。', ['これが最初の文です。', 'これは二番目の文です。', 'これが最後の文です。']),
             ('これが最初の文です！これは二番目の文です！これが最後の文です！', ['これが最初の文です！', 'これは二番目の文です！', 'これが最後の文です！']),
-            ('これが最初の文です？これは二番目の文です？これが最後の文です？', ['これが最初の文です？', 'これは二番目の文です？', 'これが最後の文です？'])
+            ('これが最初の文です？これは二番目の文です？これが最後の文です？', ['これが最初の文です？', 'これは二番目の文です？', 'これが最後の文です？']),
+            # inserting unnecessary newlines should be avoided
+            ('これが最初の文です。\nこれは二番目の文です。\nこれが最後の文です。', ['これが最初の文です。', 'これは二番目の文です。', 'これが最後の文です。']),
         ]:
             with self.subTest(text=text):
                 self.assertEqual(expected_sentences, hasami.segment_sentences(text))
