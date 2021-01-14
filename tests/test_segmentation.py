@@ -2,6 +2,8 @@ import re
 import unittest
 
 import hasami
+from hasami.segmentation import DEFAULT_ENCLOSURES
+from hasami.util import make_enclosure_definitions
 
 
 class TestSentenceSegmentation(unittest.TestCase):
@@ -107,6 +109,13 @@ class TestSentenceSegmentation(unittest.TestCase):
         """Test that at least one sentence-ending markers has to be defined"""
         with self.assertRaises(ValueError):
             hasami.Hasami(sentence_ending_markers='')
+
+    def test_default_enclosures(self):
+        """Test that certain enclosures are defined by default"""
+        for opening, closing in make_enclosure_definitions(DEFAULT_ENCLOSURES):
+            with self.subTest(opening + closing):
+                text = '外外外%s中中中。%s外外外。' % (opening, closing)
+                self.assertEqual([text], hasami.segment_sentences(text))
 
     def test_custom_enclosures(self):
         """Test that custom enclosures can be defined"""

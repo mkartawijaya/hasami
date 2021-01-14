@@ -5,7 +5,7 @@ import hasami.util
 
 DEFAULT_SENTENCE_ENDING_MARKERS = '。！？'
 
-DEFAULT_ENCLOSURES = '「」『』（）'
+DEFAULT_ENCLOSURES = """〝〟「」『』（）〔〕［］｛｝｟｠〈〉《》【】〖〗〘〙〚〛‹›«»''""()[]{}｢｣"""
 
 
 class Hasami:
