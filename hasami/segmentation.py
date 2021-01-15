@@ -3,7 +3,7 @@ from typing import List, Union, Iterable, Pattern
 
 import hasami.util
 
-DEFAULT_SENTENCE_ENDING_MARKERS = '。！？'
+DEFAULT_SENTENCE_ENDING_MARKERS = '。！？!?‼⁈⁈⁇'
 
 DEFAULT_ENCLOSURES = """〝〟「」『』（）〔〕［］｛｝｟｠〈〉《》【】〖〗〘〙〚〛‹›«»''""()[]{}｢｣"""
 
