@@ -9,6 +9,7 @@ DEFAULT_ENCLOSURES = """〝〟「」『』（）〔〕［］｛｝｟｠〈〉�
 
 
 class Hasami:
+    """Represents the sentence segmentation logic with specific settings applied."""
 
     def __init__(
             self,
@@ -16,11 +17,16 @@ class Hasami:
             enclosures: str = DEFAULT_ENCLOSURES,
             exceptions: Iterable[Union[str, Pattern]] = ()
     ):
-        """Construct an instance that recognizes the specified enclosures.
+        """Construct an instance with the specified settings for sentence segmentation.
 
-        :param enclosures: The enclosures that should be considered during segmentation.
-        :param exceptions: Exceptions that should be considered during segmentation. Any newlines that
-                           are matched by the specified patterns will be removed from the output.
+        Args:
+            sentence_ending_markers: Each individual character as well as runs of any combination of
+                characters in this string will be considered to signify the end of a sentence.
+            enclosures: A string of pairs of characters. Each pair of characters will be considered to
+                signify the opening, resp. closing of an enclosure. Any potential sentence ending
+                inside an enclosure will be ignored during segmentation.
+            exceptions: Exceptions that should be considered during segmentation.
+                Any newlines that are matched by the specified patterns will be removed.
         """
 
         # precompile all exceptions; re.compile() is idempotent so we can safely pass in already compiled patterns
@@ -58,7 +64,17 @@ class Hasami:
 
         return text
 
-    def segment_sentences(self, text: str, strip_whitespace=True) -> List[str]:
+    def segment_sentences(self, text: str, strip_whitespace: bool = True) -> List[str]:
+        """Segments the supplied text into sentences.
+
+        Args:
+            text: The text to segment.
+            strip_whitespace: If strip_whitespace is True surrounding
+                whitespace is stripped from the returned sentences.
+
+        Returns:
+            A list of strings representing the identified sentences.
+        """
         # Trailing whitespace ends up as an individual chunk after splitting: "〇〇〇。 " -> ["〇〇〇。", " "]
         # So we strip surrounding whitespace from the whole input to avoid that if requested.
         text = text.strip() if strip_whitespace else text
