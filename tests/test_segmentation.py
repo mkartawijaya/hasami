@@ -2,7 +2,6 @@ import re
 import unittest
 
 import hasami
-from hasami.segmentation import DEFAULT_ENCLOSURES, DEFAULT_SENTENCE_ENDING_MARKERS
 from hasami.util import make_enclosure_definitions
 
 
@@ -98,7 +97,7 @@ class TestSentenceSegmentation(unittest.TestCase):
 
     def test_default_sentence_ending_markers(self):
         """Test that certain sentence ending markers are defined by default"""
-        for marker in DEFAULT_SENTENCE_ENDING_MARKERS:
+        for marker in hasami.DEFAULT_SENTENCE_ENDING_MARKERS:
             with self.subTest(marker):
                 text = 'これが最初の文です%sこれは二番目の文です。' % marker
                 self.assertEqual([
@@ -122,7 +121,7 @@ class TestSentenceSegmentation(unittest.TestCase):
 
     def test_default_enclosures(self):
         """Test that certain enclosures are defined by default"""
-        for opening, closing in make_enclosure_definitions(DEFAULT_ENCLOSURES):
+        for opening, closing in make_enclosure_definitions(hasami.DEFAULT_ENCLOSURES):
             with self.subTest(opening + closing):
                 text = '外外外%s中中中。%s外外外。' % (opening, closing)
                 self.assertEqual([text], hasami.segment_sentences(text))

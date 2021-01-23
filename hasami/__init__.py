@@ -1,6 +1,6 @@
 from typing import List
 
-from hasami.segmentation import Hasami
+from hasami.hasami import Hasami, DEFAULT_ENCLOSURES, DEFAULT_SENTENCE_ENDING_MARKERS
 
 DEFAULT_INSTANCE = Hasami()
 
