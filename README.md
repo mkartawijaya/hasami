@@ -11,8 +11,10 @@ Hasami is a tool to perform sentence segmentation on japanese text.
 
 ## Installation
 
+:warning: Currently in progress of sorting out a PyPI name conflict so this might change in the future.
+
 ```bash
-pip install hasami
+pip install py-hasami
 ```
 
 ## Usage
