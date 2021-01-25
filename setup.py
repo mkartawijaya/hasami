@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='py-hasami',
+    name='hasami',
     version='0.0.1',
     description='Sentence segmentation for japanese text',
     long_description=long_description,
